@@ -22,8 +22,7 @@ class Board:
         self.stone = pygame.image.load(os.path.join('data', 'sprites', 'stone.png'))
         self.snack = pygame.image.load(os.path.join('data', 'sprites', 'snack.png'))
 
-    def render(self):  # drawing a board
-        pygame.draw.line(screen, (0, 0, 0), (0, self.top), (width, self.top), 3)
+    def render(self):
         for row in range(self.rows):
             for col in range(self.rows):
                 x = col * self.cell_size + self.left
@@ -354,23 +353,6 @@ def game():
         draw_text_by_rect('menu', font, text_color, menu_btn)
         draw_text(f'score: {score}', font, text_color, (5, 5))
 
-        snake.move()
-
-        pygame.time.delay(delay)
-        clock.tick(fps)
-        pygame.display.update()
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if menu_btn.collidepoint(event.pos):
-                    game_loop_run = False
-                    clicked = True
-                    reset()
-                    last_score = 0
-
         keys = pygame.key.get_pressed()
         if (keys[pygame.K_w] or keys[pygame.K_UP]) and snake.ydir != 1:
             snake.xdir = 0
@@ -384,6 +366,12 @@ def game():
         elif (keys[pygame.K_a] or keys[pygame.K_LEFT]) and snake.xdir != 1:
             snake.xdir = -1
             snake.ydir = 0
+
+        snake.move()
+
+        pygame.time.delay(delay)
+        clock.tick(fps)
+        pygame.display.update()
 
         if keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]:
             fps = 20
@@ -409,6 +397,18 @@ def game():
 
         if not game_loop_run and not clicked:
             end_window()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if menu_btn.collidepoint(event.pos):
+                    game_loop_run = False
+                    clicked = True
+                    reset()
+                    score = 0
+                    last_score = 0
 
 
 def options():
